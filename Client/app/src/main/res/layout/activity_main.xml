@@ -1,0 +1,305 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/back"
+    android:orientation="vertical"
+    tools:context=".ui.MainActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb_main_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        app:menu="@menu/toolbar_menu"
+        app:title="基站远程监控" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:text="用户信息"
+            android:textColor="@color/whiteSmoke" />
+
+        <TextView
+            android:id="@+id/tv_main_user_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:textColor="@color/whiteSmoke"
+            tools:text="assssa" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_weight="1"
+            android:text="当前展示的设备信息"
+            android:textColor="@color/whiteSmoke" />
+
+        <TextView
+            android:id="@+id/actv_main_now_show_device_id"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1.5"
+            android:text="当前没有连接到设备"
+            android:textColor="@color/whiteSmoke" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt_main_get_device_data"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bt_bg"
+            android:elevation="10dp"
+            android:text="查看设备数据" />
+
+        <Button
+            android:id="@+id/bt_main_add_device"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bt_bg"
+            android:text="添加设备" />
+
+        <Button
+            android:id="@+id/bt_main_admin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bt_bg"
+            android:text="管理员" />
+
+        <Button
+            android:id="@+id/bt_main_apply_admin"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_weight="1"
+            android:background="@drawable/bt_bg"
+            android:text="申请管理员" />
+    </LinearLayout>
+
+    <com.wang.avi.AVLoadingIndicatorView
+        android:id="@+id/avi_main_transmission"
+        style="@style/AVLoadingIndicatorView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:visibility="visible"
+        app:indicatorColor="@color/colorAccent"
+        app:indicatorName="BallBeatIndicator" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <GridLayout
+            android:id="@+id/GridLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:columnCount="4"
+            android:orientation="horizontal">
+
+            <TextView
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:drawableLeft="@mipmap/temperature"
+                android:drawablePadding="5dp"
+                android:text="温度："
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/tv_main_temperature"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="4"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:text="---"
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:drawableLeft="@mipmap/humidity"
+                android:drawablePadding="5dp"
+                android:text="湿度："
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/tv_main_humidity"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="4"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:text="---"
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:drawableLeft="@mipmap/rainfall"
+                android:drawablePadding="5dp"
+                android:text="雨量："
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/tv_main_rainfall"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="4"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:text="---"
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:drawableLeft="@mipmap/light_intensity"
+                android:drawablePadding="5dp"
+                android:text="光照强度："
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/tv_main_light_intensity"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="4"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:text="---"
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:drawableLeft="@mipmap/smoke"
+                android:drawablePadding="5dp"
+                android:text="烟雾："
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/tv_main_smoke"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="4"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:text="---"
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:drawableLeft="@mipmap/flame"
+                android:drawablePadding="5dp"
+                android:text="火焰："
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/tv_main_flame"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="4"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:text="---"
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="1"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:drawableLeft="@mipmap/electricity"
+                android:drawablePadding="5dp"
+                android:text="电路："
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+            <TextView
+                android:id="@+id/tv_main_electricity"
+                android:layout_rowWeight="1"
+                android:layout_columnWeight="4"
+                android:layout_gravity="center|fill"
+                android:layout_margin="5dp"
+                android:text="---"
+                android:textColor="@color/whiteSmoke"
+                android:textSize="18dp" />
+
+        </GridLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_margin="10dp"
+            android:drawableLeft="@mipmap/picture"
+            android:drawablePadding="5dp"
+            android:text="图像数据"
+            android:textColor="@color/whiteSmoke"
+            android:textSize="18dp" />
+
+        <ImageView
+            android:id="@+id/iv_main_picture"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_margin="5dp"
+            android:layout_weight="1" />
+    </LinearLayout>
+
+</LinearLayout>

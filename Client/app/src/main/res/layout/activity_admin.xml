@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@mipmap/back"
+    android:orientation="vertical"
+    tools:context=".ui.base.AdminActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/tb_admin_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorAccent"
+        app:navigationIcon="@drawable/back"
+        app:title="基站远程监控" />
+
+    <Button
+        android:id="@+id/bt_admin_device_manager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:background="@drawable/bt_bg"
+        android:text="管理设备" />
+
+    <Button
+        android:id="@+id/bt_admin_get_admin_apply_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:background="@drawable/bt_bg"
+        android:text="查看管理员申请列表" />
+
+    <Button
+        android:id="@+id/bt_damin_get_add_device_apply_list"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:background="@drawable/bt_bg"
+        android:text="查看添加设备申请列表" />
+
+    <LinearLayout
+        android:id="@+id/ll_set_data_valid_time_admin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="5dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt_admin_set_data_valid_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="3"
+            android:background="@drawable/bt_bg"
+            android:text="@string/dataValidTime" />
+
+        <TextView
+            android:id="@+id/tv_data_valid_time"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="20dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="2天"
+            android:textColor="@color/whiteSmoke"
+            android:textSize="16dp"
+            android:textStyle="bold" />
+    </LinearLayout>
+</LinearLayout>
