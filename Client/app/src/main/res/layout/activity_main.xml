@@ -67,7 +67,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="8dp"
+        android:layout_margin="10dp"
         android:gravity="center"
         android:orientation="horizontal">
 
@@ -75,7 +75,6 @@
             android:id="@+id/bt_main_get_device_data"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="8dp"
             android:layout_weight="1"
             android:background="@drawable/bt_bg"
             android:elevation="10dp"
@@ -107,6 +106,31 @@
             android:layout_weight="1"
             android:background="@drawable/bt_bg"
             android:text="申请管理员" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt_main_cool_down"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bt_bg"
+            android:text="降温" />
+
+        <Button
+            android:id="@+id/bt_main_water_spray"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="5dp"
+            android:layout_weight="1"
+            android:background="@drawable/bt_bg"
+            android:text="喷水" />
     </LinearLayout>
 
     <com.wang.avi.AVLoadingIndicatorView

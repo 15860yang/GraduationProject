@@ -8,4 +8,8 @@
 
     <color name="whiteSmoke">#F5F5F5</color>
     <color name="white">#FFFFFF</color>
+
+    <color name="OrangeRed">#FF4500</color>
+
+    <color name="SpringGreen2">#00EE76</color>
 </resources>

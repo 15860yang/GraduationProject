@@ -9,24 +9,26 @@
     android:orientation="horizontal"
     android:padding="5dp">
 
-    <TextView
-        android:id="@+id/tv_admin_apply_item_uuid"
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentStart="true"
-        android:layout_centerVertical="true"
-        android:textSize="18dp"
-        tools:text="申请人的uuid" />
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_admin_apply_item_apply_msg"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginStart="10dp"
-        android:layout_toEndOf="@id/tv_admin_apply_item_uuid"
-        android:textSize="18dp"
-        tools:text="msg" />
+        <TextView
+            android:id="@+id/tv_admin_apply_item_uuid"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            tools:text="申请人的uuid" />
+
+        <TextView
+            android:id="@+id/tv_admin_apply_item_apply_msg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="14dp"
+            tools:text="msg" />
+
+    </LinearLayout>
 
     <Button
         android:id="@+id/bt_admin_apply_item_not_agree_admin_apply"
@@ -49,8 +51,8 @@
         android:layout_centerVertical="true"
         android:background="@drawable/list_item_bt_bg"
         android:minHeight="40dp"
-        android:textColor="@color/whiteSmoke"
         android:padding="5dp"
-        android:text="同意" />
+        android:text="同意"
+        android:textColor="@color/whiteSmoke" />
 
 </RelativeLayout>

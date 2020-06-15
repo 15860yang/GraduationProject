@@ -1,27 +1,19 @@
 package com.snowman.graduationprojectclient.ui
 
-import android.graphics.Bitmap
 import android.os.Bundle
-import android.os.Handler
-import android.os.Message
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.alibaba.fastjson.JSON
 import com.google.gson.GsonBuilder
-import com.google.gson.reflect.TypeToken
 import com.snowman.graduationprojectclient.Constant
 import com.snowman.graduationprojectclient.R
 import com.snowman.graduationprojectclient.adapter.PastTimeDataAdapter
 import com.snowman.graduationprojectclient.bean.*
 import com.snowman.graduationprojectclient.remote.websocket.MyWebSocket
-import com.snowman.graduationprojectclient.remote.websocket.WebSocketMsgFlagType
 import com.snowman.graduationprojectclient.ui.base.BaseActivity
-import com.snowman.graduationprojectclient.utils.ByteDataUtil
 import com.snowman.graduationprojectclient.utils.log
-import kotlinx.android.synthetic.main.activity_past_time_device_data.*
 import org.java_websocket.handshake.ServerHandshake
-import java.nio.charset.Charset
 import java.sql.Timestamp
 import java.text.DateFormat
 import java.text.ParseException
@@ -35,6 +27,10 @@ class PastTimeDeviceDataActivity : BaseActivity() {
     private lateinit var mRvAdapter: PastTimeDataAdapter
 
     private lateinit var mToolbar: Toolbar
+
+    private lateinit var startTime: String
+    private lateinit var endTime: String
+
 
     private val mDataList = ArrayList<BasePastTimeData>()
 
@@ -62,6 +58,8 @@ class PastTimeDeviceDataActivity : BaseActivity() {
         }
         log("type = ${type.value}")
         devid = intent.getStringExtra(PAST_TIME_DEVICE_ID)!!
+        startTime = intent.getStringExtra(START_TIME)!!
+        endTime = intent.getStringExtra(END_TIME)!!
     }
 
     var send: Boolean = false
@@ -80,8 +78,8 @@ class PastTimeDeviceDataActivity : BaseActivity() {
                 val pastTimeQueryData =
                     PastTimeQueryData(
                         type.value,
-                        createTimeStamp("2020-05-26 17:30:51"),
-                        createTimeStamp("2020-05-26 17:31:03")
+                        createTimeStamp(startTime),
+                        createTimeStamp(endTime)
                     )
                 val str = JSON.toJSONString(pastTimeQueryData)
                 log("will send $str")
@@ -222,6 +220,9 @@ class PastTimeDeviceDataActivity : BaseActivity() {
     companion object {
         const val PAST_TIME_TYPE = "past_time_type"
         const val PAST_TIME_DEVICE_ID = "past_time_type_device_id"
+        const val START_TIME = "start_time"
+        const val END_TIME = "end_time"
+
     }
 
     enum class PastTimeDataType(var value: Int) {

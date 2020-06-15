@@ -9,7 +9,6 @@ public interface Constant {
     interface Remote {
         String WEB_SOCKET_SERVER_URL = "ws://120.76.58.156:8080/gatewebSocket/";
         String SERVER_BASE_URL = "http://120.76.58.156:8080";
-        String LONG_CONNECTION_URL = "";
     }
 
     /**

@@ -22,7 +22,13 @@ class SpUtil {
         }
 
         fun getString(stringId: Int): String? {
-            return sp?.getString(context?.getString(stringId), "")
+            val ss: String? = context?.getString(stringId)
+            ss?.let {
+                val s = sp?.getString(it, "")
+                log("getString is = $s")
+                return s
+            }
+            return null
         }
 
         fun getString(key: String): String? {

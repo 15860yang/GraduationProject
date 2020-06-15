@@ -127,7 +127,7 @@
             android:layout_columnWeight="4"
             android:layout_gravity="center|fill"
             android:layout_margin="5dp"
-            android:text="24.3度"
+            android:text="---"
             android:textColor="@color/whiteSmoke"
             android:textSize="18dp" />
 
@@ -148,7 +148,7 @@
             android:layout_columnWeight="4"
             android:layout_gravity="center|fill"
             android:layout_margin="5dp"
-            android:text="30.2%"
+            android:text="---"
             android:textColor="@color/whiteSmoke"
             android:textSize="18dp" />
 
@@ -169,7 +169,7 @@
             android:layout_columnWeight="4"
             android:layout_gravity="center|fill"
             android:layout_margin="5dp"
-            android:text="无雨"
+            android:text="---"
             android:textColor="@color/whiteSmoke"
             android:textSize="18dp" />
 
@@ -190,7 +190,7 @@
             android:layout_columnWeight="4"
             android:layout_gravity="center|fill"
             android:layout_margin="5dp"
-            android:text="中等"
+            android:text="---"
             android:textColor="@color/whiteSmoke"
             android:textSize="18dp" />
 
@@ -211,7 +211,7 @@
             android:layout_columnWeight="4"
             android:layout_gravity="center|fill"
             android:layout_margin="5dp"
-            android:text="无"
+            android:text="---"
             android:textColor="@color/whiteSmoke"
             android:textSize="18dp" />
 
@@ -232,7 +232,7 @@
             android:layout_columnWeight="4"
             android:layout_gravity="center|fill"
             android:layout_margin="5dp"
-            android:text="无"
+            android:text="---"
             android:textColor="@color/whiteSmoke"
             android:textSize="18dp" />
 
@@ -253,7 +253,7 @@
             android:layout_columnWeight="4"
             android:layout_gravity="center|fill"
             android:layout_margin="5dp"
-            android:text="正常"
+            android:text="---"
             android:textColor="@color/whiteSmoke"
             android:textSize="18dp" />
 

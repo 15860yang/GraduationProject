@@ -2,6 +2,8 @@ package com.snowman.graduationprojectclient.adapter
 
 import android.app.Activity
 import android.content.Context
+import android.os.Handler
+import android.os.Message
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,11 +18,14 @@ import com.snowman.graduationprojectclient.remote.remoteservice.CallBack
 import com.snowman.graduationprojectclient.remote.remoteservice.RemoteService
 import com.snowman.graduationprojectclient.ui.DeviceListActivity
 import com.snowman.graduationprojectclient.ui.PastTimeDeviceDataActivity
+import com.snowman.graduationprojectclient.ui.PastTimeDeviceDataActivity.Companion.END_TIME
 import com.snowman.graduationprojectclient.ui.PastTimeDeviceDataActivity.Companion.PAST_TIME_DEVICE_ID
 import com.snowman.graduationprojectclient.ui.PastTimeDeviceDataActivity.Companion.PAST_TIME_TYPE
+import com.snowman.graduationprojectclient.ui.PastTimeDeviceDataActivity.Companion.START_TIME
 import com.snowman.graduationprojectclient.ui.base.BaseActivity
 import com.snowman.graduationprojectclient.utils.log
 import com.snowman.graduationprojectclient.view.DeviceManagerDialog
+import com.snowman.graduationprojectclient.view.InputDataDialog
 import com.snowman.graduationprojectclient.view.InputMsgDialog
 
 class SnowManRvAdapter(
@@ -32,6 +37,12 @@ class SnowManRvAdapter(
         mContext,
         dataList
     ) {
+
+    var mHandler = Handler {
+        notifyDataSetChanged()
+        return@Handler true
+    }
+
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SelectedDeviceViewHolder {
         return when (operateType) {
@@ -93,22 +104,31 @@ class SnowManRvAdapter(
                         (mContext as Activity).finish()
                     }
                     setOnClickListener(mBtShowPastTimeHDeviceData) { _, deviceWrapper ->
-                        getPastTimeData(
-                            (deviceWrapper.data as DeviceManagerBean).devid,
-                            PastTimeDeviceDataActivity.PastTimeDataType.HUMIDITY
-                        )
+                        InputDataDialog.Companion.Builder(mContext).setTitle("请输入前后日期")
+                            .setCommitButtonText("提交") { s1, e1 ->
+                                getPastTimeData(
+                                    (deviceWrapper.data as DeviceManagerBean).devid, s1, e1,
+                                    PastTimeDeviceDataActivity.PastTimeDataType.HUMIDITY
+                                )
+                            }.create().show()
                     }
                     setOnClickListener(mBtShowPastTimeTDeviceData) { _, deviceWrapper ->
-                        getPastTimeData(
-                            (deviceWrapper.data as DeviceManagerBean).devid,
-                            PastTimeDeviceDataActivity.PastTimeDataType.TEMPERATURE
-                        )
+                        InputDataDialog.Companion.Builder(mContext).setTitle("请输入前后日期")
+                            .setCommitButtonText("提交") { s1, e1 ->
+                                getPastTimeData(
+                                    (deviceWrapper.data as DeviceManagerBean).devid, s1, e1,
+                                    PastTimeDeviceDataActivity.PastTimeDataType.TEMPERATURE
+                                )
+                            }.create().show()
                     }
                     setOnClickListener(mBtShowPastTimePDeviceData) { _, deviceWrapper ->
-                        getPastTimeData(
-                            (deviceWrapper.data as DeviceManagerBean).devid,
-                            PastTimeDeviceDataActivity.PastTimeDataType.PICTURE
-                        )
+                        InputDataDialog.Companion.Builder(mContext).setTitle("请输入前后日期")
+                            .setCommitButtonText("提交") { s1, e1 ->
+                                getPastTimeData(
+                                    (deviceWrapper.data as DeviceManagerBean).devid, s1, e1,
+                                    PastTimeDeviceDataActivity.PastTimeDataType.PICTURE
+                                )
+                            }.create().show()
                     }
                 }
                 DeviceListActivity.OperateType.MANAGER_DEICE -> {
@@ -177,11 +197,15 @@ class SnowManRvAdapter(
 
         private fun getPastTimeData(
             devid: String,
+            time1: String, time2: String,
             type: PastTimeDeviceDataActivity.PastTimeDataType
         ) {
+            log("出了点问题呢   $time1   $time2")
             (mContext as BaseActivity).startActivity(PastTimeDeviceDataActivity::class.java) {
                 it.putExtra(PAST_TIME_TYPE, type.value)
                 it.putExtra(PAST_TIME_DEVICE_ID, devid)
+                it.putExtra(START_TIME, time1)
+                it.putExtra(END_TIME, time2)
             }
         }
 
@@ -205,6 +229,7 @@ class SnowManRvAdapter(
                 }.create().show()
         }
 
+
         /**
          * 处理管理员申请
          */
@@ -214,6 +239,9 @@ class SnowManRvAdapter(
                 data.uuid, agree
                 , object : CallBack<GeneralResponse> {
                     override fun success(data: GeneralResponse?) {
+                        dataList.remove(adminApply)
+                        mHandler.sendEmptyMessage(1)
+
                         //---代办---删除列表item
                     }
 
@@ -232,6 +260,8 @@ class SnowManRvAdapter(
                 data.uuid, data.devid, agree
                 , object : CallBack<String> {
                     override fun success(data: String?) {
+                        dataList.remove(adminApply)
+                        mHandler.sendEmptyMessage(1)
                         //---代办---
                         log(data!!)
                     }

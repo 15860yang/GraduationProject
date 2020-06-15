@@ -18,9 +18,9 @@ import com.snowman.wifi.bean.ResponseRemote
 import com.snowman.wifi.manager.UserManager
 import com.snowman.wifi.remote.websocket.*
 import com.snowman.wifi.utils.EnvironmentalDigitalConversionUtils
-import com.snowman.wifi.utils.ToastUtil
 import com.snowman.wifi.utils.log
 import com.wang.avi.AVLoadingIndicatorView
+import kotlinx.android.synthetic.main.activity_main.*
 import org.java_websocket.handshake.ServerHandshake
 import java.net.NetworkInterface
 import java.net.ServerSocket
@@ -90,6 +90,12 @@ class MainActivity : BaseActivity(), MyWebSocket.WebSocketReCreate {
         when (item.itemId) {
             R.id.login_out -> {
                 startActivity(LoginActivity::class.java)
+                remoteDataStreamLongLink?.close()
+                remoteDataStreamLongLink = null
+                serverSocket?.close()
+                serverSocket = null
+                wifiSocket?.close()
+                wifiSocket = null
                 finish()
             }
         }
@@ -117,7 +123,6 @@ class MainActivity : BaseActivity(), MyWebSocket.WebSocketReCreate {
             }
 
             override fun connectionError(tr: Throwable?) {
-                log("长连接 连接失败")
             }
 
             override fun connectionClosed(
@@ -146,7 +151,7 @@ class MainActivity : BaseActivity(), MyWebSocket.WebSocketReCreate {
     private val mHandler = Handler {
         when (it.what) {
             MsgType.ORDINARY.value -> {
-                fillingOrdinary(it.obj as OrdinaryData)
+                fillingOrdinary(it.obj as com.snowman.wifi.remote.websocket.OrdinaryData)
                 true
             }
             MsgType.PICTURE.value -> {
@@ -166,20 +171,20 @@ class MainActivity : BaseActivity(), MyWebSocket.WebSocketReCreate {
         mAviTransmissionAnimation.smoothToHide()
     }
 
-    private fun fillingOrdinary(ordinaryData: OrdinaryData) {
-        mTvHumidity.text = "${ordinaryData.humidity1}.${ordinaryData.humidity2}%"
-        mTvTemperature.text = "${ordinaryData.temperature1}.${ordinaryData.temperature2} 度"
+    private fun fillingOrdinary(ordinaryData: com.snowman.wifi.remote.websocket.OrdinaryData) {
+        mTvHumidity.text = "${ordinaryData.humidity}%"
+        mTvTemperature.text = "${ordinaryData.temperature} 度"
         EnvironmentalDigitalConversionUtils.ConversionNumberToLightIntensity(
             mTvLightIntensity,
-            ordinaryData.lightIntensity
+            ordinaryData.lightIntensity.toInt()
         )
         EnvironmentalDigitalConversionUtils.ConversionNumberToRainFall(
             mTvRainfall,
-            ordinaryData.rainfall
+            ordinaryData.rainfall.toInt()
         )
-        mTvFlame.text = if (ordinaryData.flame) "有" else "无"
-        mTvSmoke.text = if (ordinaryData.smoke) "有" else "无"
-        mElectricity.text = if (ordinaryData.electricity) "有" else "无"
+        mTvFlame.text = if (ordinaryData.flame) "异常" else "正常"
+        mTvSmoke.text = if (ordinaryData.smoke) "异常" else "正常"
+        mElectricity.text = if (ordinaryData.electricity) "异常" else "正常"
     }
 
     private fun getLocalIpAddress(): String? {
@@ -215,69 +220,100 @@ class MainActivity : BaseActivity(), MyWebSocket.WebSocketReCreate {
     }
 
     private fun handRemoteLongLinkMsg(data: String) {
-        val gson = GsonBuilder().create()
-        val res = gson.fromJson(data, ResponseRemote::class.java)
-        when (res.data.toString()) {
-            "1" -> {
-                socket!!.getOutputStream().write("TH".toByteArray())
-                //温度过高
-                log("温度过高")
+        log("接收到：$data")//湿度正常
+        when (data) {
+            "7" -> {
+                //降温
+                log("降温")
+                wifiSocket!!.getOutputStream().write("**CD##".toByteArray())
+                return
             }
-            "2" -> {
-                socket!!.getOutputStream().write("TL".toByteArray())
-                //温度过低
-                log("温度过低")
+            "8" -> {
+                //喷水
+                log("喷水")
+                wifiSocket!!.getOutputStream().write("**WS##".toByteArray())
+                return
             }
-            "3" -> {
-                socket!!.getOutputStream().write("HH".toByteArray())
-                //湿度过高
-                log("湿度过高")
-            }
-            "4" -> {
-                socket!!.getOutputStream().write("HL".toByteArray())
-                //湿度过低
-                log("湿度过高")
+            else -> {
+                val gson = GsonBuilder().create()
+                val res = gson.fromJson(data, ResponseRemote::class.java)
+                when (res.data.toString()) {
+                    "1" -> {
+                        wifiSocket!!.getOutputStream().write("**TT##".toByteArray())
+                        //温度过高
+                        log("温度过高")
+                        mTvTemperature.setTextColor(getColor(R.color.OrangeRed))
+                    }
+                    "2" -> {
+                        wifiSocket!!.getOutputStream().write("**TT##".toByteArray())
+                        //温度过低
+                        log("温度过低")
+                        mTvTemperature.setTextColor(getColor(R.color.SpringGreen2))
+                    }
+                    "3" -> {
+                        wifiSocket!!.getOutputStream().write("**HH##".toByteArray())
+                        //湿度过高
+                        log("湿度过高")
+                        mTvHumidity.setTextColor(getColor(R.color.OrangeRed))
+                    }
+                    "4" -> {
+                        wifiSocket!!.getOutputStream().write("**HH##".toByteArray())
+                        //湿度过低
+                        log("湿度过低")
+                        mTvHumidity.setTextColor(getColor(R.color.SpringGreen2))
+                    }
+                    "5" -> {
+                        wifiSocket!!.getOutputStream().write("**00##".toByteArray())
+                        //温度正常
+                        log("温度正常")
+                        mTvTemperature.setTextColor(getColor(R.color.whiteSmoke))
+                    }
+                    "6" -> {
+                        //湿度正常
+                        wifiSocket!!.getOutputStream().write("**11##".toByteArray())
+                        log("湿度正常")
+                        mTvHumidity.setTextColor(getColor(R.color.whiteSmoke))
+                    }
+                }
             }
         }
     }
 
-    var socket: Socket? = null
+    var wifiSocket: Socket? = null
 
     inner class ServerThread(private val serverSocket: ServerSocket) : Thread() {
         override fun run() {
             super.run()
             val gson = GsonBuilder().create()
             while (true) {
-                socket = serverSocket.accept()
-                mHandler.sendLogMessage("${socket!!.inetAddress.hostAddress} ${socket!!.port} 连接")
-                log("${socket!!.inetAddress.hostAddress} ${socket!!.port} 连接")
+                wifiSocket = serverSocket.accept()
+                mHandler.sendLogMessage("${wifiSocket!!.inetAddress.hostAddress} ${wifiSocket!!.port} 连接")
+                log("${wifiSocket!!.inetAddress.hostAddress} ${wifiSocket!!.port} 连接")
                 HandBlueData(blueData, {
                     mHandler.sendLogMessage(it)
                 }, {
                     mHandler.sendPictureMessage(it)
                     //remoteDataStreamLongLink.send("")
                 }, {
+                    val od = OrdinaryData(
+                        "${it.humidity1}.${it.humidity2}",
+                        "${it.temperature1}.${it.temperature2}",
+                        "${it.lightIntensity}",
+                        "${it.rainfall}",
+                        it.flame, it.smoke, it.electricity
+                    )
+                    val msg = WebSocketMsgBean(WebSocketMsgType.ORDINARY.value, od)
                     if (remoteDataStreamLongLink != null && !remoteDataStreamLongLink!!.isClosed) {
-                        val msg = WebSocketMsgBean(
-                            WebSocketMsgType.ORDINARY.value,
-                            OrdinaryData(
-                                "${it.humidity1}.${it.humidity2}",
-                                "${it.temperature1}.${it.temperature2}",
-                                "${it.lightIntensity}",
-                                "${it.rainfall}",
-                                it.flame, it.smoke
-                            )
-                        )
                         log("发送数据msg = $msg")
                         remoteDataStreamLongLink!!.send(gson.toJson(msg))
                     } else {
                         log("发送消息时发现有点尴尬")
                     }
-                    mHandler.sendOrdinaryMessage(it)
+                    mHandler.sendOrdinaryMessage(od)
                 }, { p1, p2 ->
                     handlePictureByteArray(p1, p2)
                 }).start()
-                ReadMsgThread(socket!!, blueData).start()
+                ReadMsgThread(wifiSocket!!, blueData).start()
             }
         }
     }
@@ -339,7 +375,7 @@ class MainActivity : BaseActivity(), MyWebSocket.WebSocketReCreate {
         sendMessage(MsgType.PICTURE, obj)
     }
 
-    private fun Handler.sendOrdinaryMessage(obj: Any) {
+    private fun Handler.sendOrdinaryMessage(obj: com.snowman.wifi.remote.websocket.OrdinaryData) {
         sendMessage(MsgType.ORDINARY, obj)
     }
 

@@ -22,9 +22,13 @@ class RemoteService {
                 override fun success(data: String?) {
                     val gson = Gson()
                     val response = gson.fromJson(data, RespondData::class.java)
-                    val userInfo = gson.fromJson(response.data.toString(), UserInfo::class.java)
-                    log("登录成功：call.body = $userInfo")
-                    callback.success(userInfo)
+                    if (response.aBoolean) {
+                        val userInfo = gson.fromJson(response.data.toString(), UserInfo::class.java)
+                        log("登录成功：call.body = $userInfo")
+                        callback.success(userInfo)
+                    } else {
+                        log("登录失败")
+                    }
                 }
 
                 override fun failed(res: String?) {

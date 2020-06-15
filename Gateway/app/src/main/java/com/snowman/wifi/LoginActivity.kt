@@ -182,7 +182,7 @@ class LoginActivity : BaseActivity(), View.OnClickListener {
         if (mCbRememberPassword.isChecked) {
             SpUtil.putString(R.string.userNumber, mAcEtLoUserNumber.text.toString())
             SpUtil.putString(R.string.password, mAcEtLoPassword.text.toString())
-            SpUtil.putBoolean(R.string.userNumber, mCbRememberPassword.isChecked)
+            SpUtil.putBoolean(R.string.remember_password_eg, mCbRememberPassword.isChecked)
         }
     }
 

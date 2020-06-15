@@ -3,7 +3,6 @@ package com.snowman.wifi.remote.remoteservice
 import com.google.gson.Gson
 import com.snowman.wifi.Constant
 import com.snowman.wifi.utils.log
-import com.snowman.wifi.Constant.Remote.WEB_SOCKET_SERVER_URL
 import com.snowman.wifi.bean.DeviceInfo
 import com.snowman.wifi.bean.GeneralResponse
 import com.snowman.wifi.bean.ResponseRemote

@@ -13,7 +13,6 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.lifecycle.Observer
-import com.alibaba.fastjson.JSON
 import com.google.gson.GsonBuilder
 import com.snowman.graduationprojectclient.Constant.Remote.WEB_SOCKET_SERVER_URL
 import com.snowman.graduationprojectclient.R
@@ -52,6 +51,8 @@ class MainActivity : BaseActivity(), View.OnClickListener, MyWebSocket.WebSocket
     private lateinit var mTvSmoke: TextView
     private lateinit var mTvRainfall: TextView
     private lateinit var mElectricity: TextView
+    private lateinit var mBtCoolTem: Button
+    private lateinit var mBtWaterSpray: Button
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,8 +82,13 @@ class MainActivity : BaseActivity(), View.OnClickListener, MyWebSocket.WebSocket
         mAviTransmissionAnimation = findViewById(R.id.avi_main_transmission)
         mAviTransmissionAnimation.smoothToHide()
 
+        mBtCoolTem = findViewById(R.id.bt_main_cool_down)
+        mBtWaterSpray = findViewById(R.id.bt_main_water_spray)
+
         setSupportActionBar(mToolbar)
 
+        mBtWaterSpray.setOnClickListener(this)
+        mBtCoolTem.setOnClickListener(this)
         mBtAddDevice.setOnClickListener(this)
         mBtAdmin.setOnClickListener(this)
         mBtApplyAdmin.setOnClickListener(this)
@@ -90,20 +96,22 @@ class MainActivity : BaseActivity(), View.OnClickListener, MyWebSocket.WebSocket
     }
 
     private fun startUpView() {
-        mBtAdmin.visibility = View.GONE
-        mBtApplyAdmin.visibility = View.GONE
-
         mTvUserInfo.text =
             "name ${UserManager.instance.userInfo.username} uuid ${UserManager.instance.userInfo.uuid}"
-
         UserManager.instance.nowDisplayDeviceId.observe(this, Observer {
             mNowShowDevice.text = "${UserManager.instance.nowDisplayDeviceId.value}"
             startDisplay()
         })
         if (UserManager.instance.identityLevel.value == UserManager.IdentityLevelType.GENERAL_USER.value) {
             mBtApplyAdmin.visibility = View.VISIBLE
+            mBtAdmin.visibility = View.GONE
+            mBtCoolTem.visibility = View.GONE
+            mBtWaterSpray.visibility = View.GONE
         } else {
             mBtAdmin.visibility = View.VISIBLE
+            mBtApplyAdmin.visibility = View.GONE
+            mBtCoolTem.visibility = View.VISIBLE
+            mBtWaterSpray.visibility = View.VISIBLE
         }
         UserManager.instance.identityLevel.observe(this, Observer {
             when (it) {
@@ -137,6 +145,14 @@ class MainActivity : BaseActivity(), View.OnClickListener, MyWebSocket.WebSocket
                     DeviceListActivity.OPERATE_TYPE,
                     DeviceListActivity.OperateType.GET_DEVICE.value
                 )
+            }
+            R.id.bt_main_cool_down -> {
+                log("降温 发送7")
+                remoteDataStreamLongLink!!.send("7")
+            }
+            R.id.bt_main_water_spray -> {
+                log("喷水 发送8")
+                remoteDataStreamLongLink!!.send("8")
             }
         }
     }
@@ -210,13 +226,14 @@ class MainActivity : BaseActivity(), View.OnClickListener, MyWebSocket.WebSocket
     private fun handRemoteLongLinkMsg(data: String) {
         val remoteMsg = GsonBuilder().create().fromJson(data, WebSocketMsgBean::class.java)
         if (remoteMsg.value == WebSocketMsgType.ORDINARY.value) {
-            val ordinary =
-                GsonBuilder().create().fromJson(remoteMsg.data.toString(), OrdinaryData::class.java)
+            log("从网络接收到的普通数据 ${remoteMsg.data}")
+            val ordinary = GsonBuilder().create().fromJson(remoteMsg.data.toString(), OrdinaryData::class.java)
+            log("解析之后  $ordinary")
             val msg = Message.obtain()
             msg.what = DataType.ORDINARY.value
             msg.obj = ordinary
             mHandler.sendMessage(msg)
-            log("从网络接收到的普通数据 $data")
+
         } else if (remoteMsg.value == WebSocketMsgType.PICTURE.value) {
             if (remoteMsg.flag == WebSocketMsgFlagType.START.value) {
                 pictureIntArray = IntArray(71680)
@@ -231,6 +248,9 @@ class MainActivity : BaseActivity(), View.OnClickListener, MyWebSocket.WebSocket
                         ByteDataUtil.mergeByteToInt(buffer[2 * i], buffer[2 * i + 1])
                     i += 1
                 }
+            }
+            if (pictureArrayIndex == 71680) {
+                log("解析图片没问题")
             }
             if (remoteMsg.flag == WebSocketMsgFlagType.END.value) {
                 log("now index = $pictureArrayIndex")
@@ -281,9 +301,9 @@ class MainActivity : BaseActivity(), View.OnClickListener, MyWebSocket.WebSocket
             mTvRainfall,
             ordinaryData.rainfall
         )
-        mTvFlame.text = if (ordinaryData.flame) "有" else "无"
-        mTvSmoke.text = if (ordinaryData.smoke) "有" else "无"
-        mElectricity.text = if (ordinaryData.electricity) "有" else "无"
+        mTvFlame.text = if (ordinaryData.flame) "异常" else "正常"
+        mTvSmoke.text = if (ordinaryData.smoke) "异常" else "正常"
+        mElectricity.text = if (ordinaryData.electricity) "异常" else "正常"
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
